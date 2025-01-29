@@ -18,11 +18,10 @@
 // export default router;
 
 
-
 import express from 'express';
-import { createClients, getClients } from '../controllers/clientController';
+import { createClients, deleteClient, getClients } from '../controllers/clientController';
 import authMiddleware from '../middleware/authMiddleware';
-import upload from '../utils/multerConfig'
+import upload from '../utils/multerConfig';
 
 
 const router = express.Router();
@@ -37,6 +36,11 @@ router.post('/create', authMiddleware, upload.array('images'), createClients);
  * Route to get clients
  */
 router.get('/', getClients);
+
+/**
+ * Delete a service by id
+ */
+router.delete('/:id', authMiddleware, deleteClient);
 
 export default router;
 

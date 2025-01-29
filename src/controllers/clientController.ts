@@ -53,3 +53,29 @@ export const getClients = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Internal server error.' });
   }
 };
+
+
+/**
+ * Function to delete a client by ID.
+ * Finds the client by ID and removes it from the database.
+ */
+export const deleteClient = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    // Check if the client exists
+    const client = await Client.findById(id);
+    if (!client) {
+      res.status(404).json({ message: 'Client not found.' });
+      return;
+    }
+
+    // Delete the client
+    await Client.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Client deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting client:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+};
