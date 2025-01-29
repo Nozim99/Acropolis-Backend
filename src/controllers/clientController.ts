@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Client from '../models/Client';
 import { uploadImage } from '../utils/uploader';
+import { deleteImage } from '../services/cloudinaryService';
 
 /**
  * Function to create multiple clients.
@@ -68,6 +69,10 @@ export const deleteClient = async (req: Request, res: Response): Promise<void> =
     if (!client) {
       res.status(404).json({ message: 'Client not found.' });
       return;
+    }
+
+    if(client.cloudinaryId){
+      await deleteImage(client.cloudinaryId)
     }
 
     // Delete the client
