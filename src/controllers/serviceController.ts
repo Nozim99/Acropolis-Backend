@@ -7,18 +7,47 @@ import Service from '../models/Service';
  */
 export const createService = async (req: Request, res: Response) => {
   try {
-    const { title, description } = req.body;
-
+    const {
+      title, // default ru
+      description,  // default ru
+      title_uz,
+      description_uz,
+      title_en,
+      description_en
+    } = req.body;
+    console.log(req.body);
     if (!title || !description) {
       res.status(400).json({ message: 'Title and description are required.' });
     }
 
-    const newService = new Service({ title, description });
+    const data: {
+      title: string;
+      description: string;
+      title_uz?: string;
+      description_uz?: string;
+      title_en?: string;
+      description_en?: string
+    } = {
+      title,
+      description
+    };
+
+    if (title_uz && description_uz) {
+      data.title_uz = title_uz;
+      data.description_uz = description_uz;
+    }
+
+    if (title_en && description_en) {
+      data.title_en = title_en;
+      data.description_en = description_en;
+    }
+
+    const newService = new Service(data);
     await newService.save();
 
     res.status(201).json({
       message: 'Service created successfully.',
-      service: newService,
+      service: newService
     });
   } catch (error) {
     console.error('Error creating service:', error);

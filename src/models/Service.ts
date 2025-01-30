@@ -8,12 +8,24 @@ export interface IService extends Document {
 const ServiceSchema: Schema = new Schema({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
+  title_uz: {
+    type: String
+  },
+  description_uz: {
+    type: String
+  },
+  title_en: {
+    type: String
+  },
+  description_en: {
+    type: String
+  }
 });
 
 export default mongoose.model<IService>('Service', ServiceSchema);
