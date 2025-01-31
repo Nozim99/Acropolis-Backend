@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Client from '../models/Client';
-import { uploadImage } from '../utils/uploader';
-import { deleteImage } from '../services/cloudinaryService';
+import { deleteImage, uploadImage } from '../services/cloudinaryService';
+import fs from 'fs';
 
 /**
  * Function to create multiple clients.
@@ -19,10 +19,11 @@ export const createClients = async (req: Request, res: Response): Promise<void> 
     const createdClients = await Promise.all(
       images.map(async (image) => {
         const result = await uploadImage(image.path);
+        fs.unlinkSync(image.path);
 
         const newClient = new Client({
-          imageUrl: result.secure_url,
-          cloudinaryId: result.public_id
+          imageUrl: result.url,
+          cloudinaryId: result.publicId
         });
 
         await newClient.save();
@@ -71,14 +72,14 @@ export const deleteClient = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    if(client.cloudinaryId){
-      await deleteImage(client.cloudinaryId)
+    if (client.cloudinaryId) {
+      await deleteImage(client.cloudinaryId);
     }
 
     // Delete the client
     await Client.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'Client deleted successfully.' });
+    res.status(200).json({ message: 'Client deleted successfully!' });
   } catch (error) {
     console.error('Error deleting client:', error);
     res.status(500).json({ message: 'Internal server error.' });

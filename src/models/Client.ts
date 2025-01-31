@@ -1,5 +1,3 @@
-// src/models/Client.ts
-
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IClient extends Document {
