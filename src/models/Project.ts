@@ -3,11 +3,12 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IProject extends Document {
   title: string;
-  title_uz: string;
-  title_en: string;
+  title_uz?: string;
+  title_en?: string;
   description: string;
-  description_uz: string;
-  description_en: string;
+  description_uz?: string;
+  description_en?: string;
+  sort?: Number;
   image: {
     url: string;
     cloudinaryId: string;
@@ -37,7 +38,8 @@ const ProjectSchema: Schema = new Schema({
   title_uz: String,
   title_en: String,
   description_uz: String,
-  description_en: String
+  description_en: String,
+  sort: Number
 });
 
 export default mongoose.model<IProject>('Project', ProjectSchema);

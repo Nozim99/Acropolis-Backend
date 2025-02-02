@@ -6,15 +6,15 @@ import { NODE_ENV } from './constants';
  * Handles errors and sends appropriate responses.
  */
 const errorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
-  console.error('Error:', err); // Log the error for debugging
+  console.error('Error:', err);
 
-  const statusCode = err.status || 500; // Default status code is 500 (Internal Server Error)
-  const message = err.message || 'Internal Server Error'; // Default error message
+  const statusCode = err.status || 500;
+  const message = err.message || 'Internal Server Error';
 
   res.status(statusCode).json({
     success: false,
     message,
-    stack: NODE_ENV === 'production' ? null : err.stack, // Show stack only in development
+    stack: NODE_ENV === 'production' ? null : err.stack
   });
 };
 

@@ -11,6 +11,7 @@ export interface ISolution extends Document {
   description: string[];
   description_uz?: string[];
   description_en?: string[];
+  sort?: number;
 }
 
 
@@ -31,7 +32,8 @@ const solutionSchema = new Schema({
     required: true
   },
   description_uz: [String],
-  description_en: [String]
+  description_en: [String],
+  sort: Number,
 });
 
 export default mongoose.model<ISolution>('Solution', solutionSchema);

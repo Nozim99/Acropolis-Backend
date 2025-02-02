@@ -1,5 +1,5 @@
 import express from 'express';
-import { createClients, deleteClient, getClients } from '../controllers/clientController';
+import { createClients, deleteClient, editSortService, getClients } from '../controllers/clientController';
 import authMiddleware from '../middleware/authMiddleware';
 import upload from '../utils/multerConfig';
 
@@ -21,6 +21,11 @@ router.get('/', getClients);
  * Delete a service by id
  */
 router.delete('/:id', authMiddleware, deleteClient);
+
+/**
+ * Sort Services
+ */
+router.put('/sort', authMiddleware, editSortService);
 
 export default router;
 

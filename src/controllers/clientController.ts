@@ -3,6 +3,7 @@ import Client from '../models/Client';
 import { deleteImage, uploadImage } from '../services/cloudinaryService';
 import fs from 'fs';
 
+
 /**
  * Function to create multiple clients.
  * Accepts multiple images, uploads each to Cloudinary, and creates a separate client for each.
@@ -21,9 +22,12 @@ export const createClients = async (req: Request, res: Response): Promise<void> 
         const result = await uploadImage(image.path);
         fs.unlinkSync(image.path);
 
+        const countDoc = await Client.countDocuments({});
+
         const newClient = new Client({
           imageUrl: result.url,
-          cloudinaryId: result.publicId
+          cloudinaryId: result.publicId,
+          sort: countDoc + 1
         });
 
         await newClient.save();
@@ -44,7 +48,7 @@ export const createClients = async (req: Request, res: Response): Promise<void> 
 
 export const getClients = async (req: Request, res: Response) => {
   try {
-    const clients = await Client.find({}, { imageUrl: 1 }).lean();
+    const clients = await Client.find({}, { imageUrl: 1 }).sort({ sort: 1 }).lean();
 
     res.json({
       message: 'Successfully completed',
@@ -82,6 +86,23 @@ export const deleteClient = async (req: Request, res: Response): Promise<void> =
     res.status(200).json({ message: 'Client deleted successfully!' });
   } catch (error) {
     console.error('Error deleting client:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+export const editSortService = async (req: Request, res: Response) => {
+  try {
+    const { data } = req.body;
+
+    const updatePromises = data.map((serviceId: string, index: number) => {
+      return Client.findByIdAndUpdate(serviceId, { sort: index + 1 });
+    });
+
+    await Promise.all(updatePromises);
+
+    res.status(200).json({ message: 'Client updated successfully!' });
+  } catch (error) {
+    console.error('Error editing client:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 };

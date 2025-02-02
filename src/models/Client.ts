@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IClient extends Document {
   imageUrl: string;
   cloudinaryId: string;
+  sort: number;
 }
 
 const ClientSchema: Schema = new Schema({
@@ -14,6 +15,7 @@ const ClientSchema: Schema = new Schema({
       type: String,
       required: true
     },
+    sort: Number
   },
   {
     toJSON: {
